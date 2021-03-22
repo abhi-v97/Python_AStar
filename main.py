@@ -1,5 +1,7 @@
 from tkinter import *
 from functools import partial
+from time import sleep
+from threading import Thread
 
 
 class Node():
@@ -33,7 +35,9 @@ class Node():
     def __eq__(self, other):
         return (self.x == other.x and self.y == other.y)
 
+    def begin(self, event):
 
+        Thread(target=self.a_star, daemon=True).start()
 
     def create_node(self, location):
         node = Button(location,
@@ -65,17 +69,17 @@ class Node():
             
             Node.mode = 2
             self.node.configure(bg='red')
+
+            root.bind('<Return>', self.begin)
             
             #print(self.heuristic(Node.start_node, Node.end_node))
 
         elif Node.mode == 2:
             self.node.configure(bg='black')
             Node.blockade.append(self.get_node(x, y))
-            print(Node.blockade)
+            #print(Node.blockade)
             
-            root.bind('<Return>', self.a_star)
             
-    
     def heuristic(self, node1, node2):
         result = abs(node1.x - node2.x) + abs(node1.y-node2.y)
         return result
@@ -107,7 +111,7 @@ class Node():
 
         return node_list
     
-    def a_star(self, event):
+    def a_star(self):
         open_list = []
         closed_list = []
         #closed_list = closed_list + Node.blockade
@@ -128,34 +132,41 @@ class Node():
             current_node = open_list[0]
             current_index = 0
             
+            
 
             for index, item in enumerate(open_list):
-                print(current_node, item, item.f, current_node.f)
+                #print(current_node, item, item.f, current_node.f)
                 if item.f < current_node.f:
                     current_node = item
                     current_index = index
 
-      
+            root.update_idletasks()
+            root.after(20)
             open_list.pop(current_index)
             #print("OPEN???", open_list)
             #print("close???", closed_list)
             closed_list.append(current_node)
+            current_node.node.configure(bg = "light blue")
 
             # check if we reached the end
 
             if current_node == Node.end_node:
-                print("BOO")
+                #print("foo")
                 total_path = []
                 current = current_node
                 Node.start_node.parent = None
 
                 while current is not None:
                     root.update_idletasks()
-                    self.node.config(bg = "blue")
+                    root.after(20)
                     total_path.append(current)
+                    current.node.configure(bg ="red")
                     current = current.parent
-                
 
+                    
+                    
+                
+                total_path.append(Node.start_node)
                 print (total_path)
 
                 
@@ -166,10 +177,15 @@ class Node():
             neighbour = current_node.neighbour_list
             
             for i in neighbour:
+                root.update_idletasks()
+                root.after(20)
+                
                 
                 if i in closed_list or i in Node.blockade:
+                    
                     continue
-            
+
+                i.node.configure(bg="blue")
                 i.g = current_node.g + 1
 
                 
@@ -183,7 +199,7 @@ class Node():
                 
                 
                 i.parent = current_node
-                print(f"adding {i} to {open_list} because its not in {closed_list}", current_node)
+                #print(f"adding {i} to {open_list} because its not in {closed_list}", current_node)
                 open_list.append(i)
 
         print("Fail!")
@@ -200,13 +216,13 @@ node_frame = Frame(
 )
 node_frame.place(x=0,y=0)
 
-for x in range(10):
-    for y in range(10):
+for x in range(25):
+    for y in range(25):
         c = Node(x, y)
         c.create_node(node_frame)
         c.node.grid(column = x, row = y)
 
-
+#root.bind('<Return>', Node.a_star)
 
 #print(Node.start, Node.end)
 root.mainloop()
