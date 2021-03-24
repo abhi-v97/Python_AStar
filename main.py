@@ -4,7 +4,7 @@ from time import sleep
 from threading import Thread
 
 # time (ms) to wait between checking each node. 0 for instant result, 20 to see each step (and it looks cool)
-t = 0
+t = 10
 
 
 class Node():
@@ -153,7 +153,7 @@ class Node():
             open_list.pop(current_index)
             closed_list.append(current_node)
 
-            current_node.node.configure(bg="light blue")
+            current_node.node.configure(bg="purple")
 
             # check if we reached the end
             if current_node == Node.end_node:
@@ -171,6 +171,7 @@ class Node():
                     current.node.configure(bg="red")
                     current = current.parent
 
+                total_path.reverse()
                 print(total_path)
 
                 return total_path
@@ -203,6 +204,7 @@ class Node():
                 #print(f"adding {i} to {open_list} because its not in {closed_list}", current_node)
                 if i not in open_list:
                     open_list.append(i)
+            current_node.node.configure(bg="light blue")
 
         # If open list has been exhausted without reaching the end, print Fail
         print("Fail!")
@@ -210,6 +212,7 @@ class Node():
 
 root = Tk()
 root.title("A* Algorithm")
+root.geometry("1000x1100")
 
 node_frame = Frame(
     root
