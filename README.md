@@ -8,7 +8,7 @@ Euclidean Distance: d(x, y)<sup>2</sup> = (x<sub>1</sub> - y<sub>1</sub>)<sup>2<
 
 The code is based on the pseudocode found on wikipedia [here](https://en.wikipedia.org/wiki/A*_search_algorithm).
 
-To use it, click nodes to set the desired nodes.
+To use it, click the buttons on the grid to set the desired nodes.
 
 * First click is the start node, coloured green.
 
