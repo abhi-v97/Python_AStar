@@ -4,7 +4,7 @@ from time import sleep
 from threading import Thread
 
 # time (ms) to wait between checking each node. 0 for instant result, 20 to see each step (and it looks cool)
-t = 10
+t = 0
 
 
 class Node():
